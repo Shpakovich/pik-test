@@ -18,4 +18,9 @@ function getCurrentTimesOfDay() {
     return timesOfDay;
 }
 
-export default getCurrentTimesOfDay;
+function getFormTitle() {
+    const timesOfDay = getCurrentTimesOfDay();
+    return `Добр${timesOfDay === 'ночь' ? 'ая' : 'ый'} ${timesOfDay}`
+}
+
+export default getFormTitle;

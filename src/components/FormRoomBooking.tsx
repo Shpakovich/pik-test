@@ -1,19 +1,19 @@
 import React, {Component} from 'react';
 import './FromRoomBooking.css';
 import Input from './Input'
-import getCurrentTimesOfDay from "../helpers/getCurrentTimesOfDay";
+import getFormTitle from "../helpers/getCurrentTimesOfDay";
 
 export default class FromRoomBooking extends Component {
     constructor(props: any) {
         super(props);
         // @ts-ignore
-        this.getCurrentTimesOfDay = getCurrentTimesOfDay.bind(this);
+        this.getFormTitle = getFormTitle.bind(this);
     }
     render() {
         return (
             <div className="FormRoomBooking">
-                <h1>Добрый { // @ts-ignore
-                    this.getCurrentTimesOfDay()
+                <h1>{ // @ts-ignore
+                    this.getFormTitle()
                     }</h1>
                 <p>Для бронирования помещений<br/>заполните форму</p>
 
