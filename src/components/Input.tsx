@@ -1,19 +1,32 @@
-import React from 'react';
+import React, {Component} from 'react';
 import './Input.css'
 
 interface Props {
+    value: any;
     type: string,
     id: string,
     label: string
 }
 
-function Input(props: Props) {
-    return (
-        <div className="input-container ic1">
-            <input id={props.id} className="input" type={props.type} placeholder=" "/>
-            <label htmlFor={props.id} className="placeholder">{props.label}</label>
-        </div>
-    )
+class Input extends Component<Props> {
+    constructor(props: Props) {
+        console.error('event', props.value)
+        super(props);
+        this.state = {value: ''};
+        this.handleChange = this.handleChange.bind(this);
+    }
+    handleChange(event: any) {
+        console.error('event', event)
+        this.setState({value: event.target.value});
+    }
+    render() {
+        return (
+            <div className="input-container ic1">
+                <input value={this.props.value} id={this.props.id} className="input" type={this.props.type} placeholder=" " onChange={this.handleChange}/>
+                <label htmlFor={this.props.id} className="placeholder">{this.props.label}</label>
+            </div>
+        )
+    }
 }
 
 export default Input;
