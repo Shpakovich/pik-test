@@ -1,0 +1,55 @@
+.input-container {
+    height: 50px;
+    position: relative;
+    width: initial;
+}
+
+.input {
+    background: #F2F4F7;
+    border-radius: 4px;
+}
+
+.placeholder {
+    color: #4D4D4D;
+    left: 16px;
+    font-size: 16px;
+    line-height: 24px;
+    pointer-events: none;
+    position: absolute;
+    transform-origin: 0 50%;
+    transition: transform 200ms, color 200ms;
+    top: 16px;
+}
+
+.input:focus ~ .placeholder,
+.input:not(:placeholder-shown) ~ .placeholder {
+    transform: translateY(-15px);
+}
+
+.input:not(:placeholder-shown) ~ .placeholder {
+    color: #808097;
+}
+
+.input:focus ~ .placeholder {
+    color: #969BA5;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+input {
+    height: 24px;
+    position: relative;
+    padding: 16px;
+    border: none;
+    font-size: 16px;
+    line-height: 24px;
+    width: -webkit-fill-available;
+}
+
+.input:focus {
+    padding: 16px 16px 8px;
+    height: 32px;
+    outline: 1px solid #DCDCE6;
+    background: #FFFFFF;
+}

@@ -1,0 +1,53 @@
+.FormRoomBooking {
+    padding: 56px 56px 32px;
+    width: fit-content;
+    margin: auto;
+
+    background-color: #fff;
+    border-radius: 8px;
+
+}
+
+h1 {
+    font-weight: 600;
+    font-size: 44px;
+    line-height: 48px;
+    margin-bottom: 16px;
+}
+
+p {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+form {
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin: 32px 0 24px;
+}
+
+
+.NamesFields {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 24px;
+}
+
+.button {
+    height: auto;
+    background: #FF4114;
+    color: #FFFFFF;
+    font-size: 16px;
+    line-height: 20px;
+    border-radius: 4px;
+}
+
+.disclaimer {
+    font-size: 12px;
+    line-height: 16px;
+    color: #969BA5;
+}
+
