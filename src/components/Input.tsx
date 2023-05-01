@@ -20,9 +20,10 @@ class Input extends Component<Props> {
         this.setState({value: event.target.value});
     }
     render() {
+        console.error('props', this.props.value)
         return (
             <div className="input-container ic1">
-                <input value={this.props.value} id={this.props.id} className="input" type={this.props.type} placeholder=" " onChange={this.handleChange}/>
+                <input id={this.props.id} className="input" type={this.props.type} placeholder=" " onChange={this.handleChange}/>
                 <label htmlFor={this.props.id} className="placeholder">{this.props.label}</label>
             </div>
         )

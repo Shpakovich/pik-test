@@ -1,6 +1,6 @@
 import {FormEventHandler} from "react";
 
-type Form = {
+export type Form = {
     name: string,
     surname: string,
     phone: string,
@@ -8,21 +8,8 @@ type Form = {
     roomCounter: number,
 }
 
-// @ts-ignore
-export function updateForm (state, action) {
-    let newStore = {};
-    for (var attr in action) {
-        // @ts-ignore
-        newStore[attr]= state[attr] + action[attr]
-        console.error('newStore', newStore)
-    }
-    return {...state, ...newStore}
-    // return Object.assign({}, state, action)
-}
-
 export class FormStore {
-    // @ts-ignore
-    constructor(updateState, state) {
+    constructor(updateState: void, state: Form) {
         // @ts-ignore
         this._updateState = updateState;
         // @ts-ignore
@@ -40,9 +27,12 @@ export class FormStore {
     update(action: Partial<Form>): FormEventHandler<HTMLFormElement> | undefined {
         // @ts-ignore
         this._state = this._updateState(this.state, action)
+        // @ts-ignore
+        this._callbacks.forEach(callback => callback())
     }
 
     subscribe(callback: any) {
+        console.error('subscribe')
         // @ts-ignore
         this._callbacks.push(callback);
         // @ts-ignore
