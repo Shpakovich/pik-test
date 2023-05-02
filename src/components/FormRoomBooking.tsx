@@ -4,6 +4,7 @@ import Input from './Input'
 import getFormTitle from "../helpers/getCurrentTimesOfDay";
 import {Form, FormStore} from "../store/form";
 import wordDeclension from "../helpers/wordDeclension";
+import {isValidPhoneNumber} from "libphonenumber-js";
 
 const initialState = {
     firstName: '',
@@ -53,11 +54,16 @@ export default class FromRoomBooking extends Component<{}, {isSubmitBtnActive: b
         event.preventDefault(); // не перезагружать страницу после отправки формы
         const {firstName, lastName, mail, phone, flatsCount} = formStore.state;
         const time = Date.now();
-        const data = {
-            user: { firstName, lastName, mail, phone },
-            order: { flatsCount, time }
+        const isValidPhone = isValidPhoneNumber(phone, 'RU')
+        if (!isValidPhone) {
+            return console.error('phone is not valid')
+        } else {
+            const data = {
+                user: { firstName, lastName, mail, phone },
+                order: { flatsCount, time }
+            }
+            console.log(data)
         }
-        console.log(data)
     }
 
     render() {
