@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import './RoomBooking.css'
 import FormRoomBooking from "../components/FormRoomBooking";
 import FormSubmissionInfo from "../components/FormSubmissionInfo";
 
@@ -21,7 +22,7 @@ export default class RoomBooking extends Component<{}, {formStatus: FormStatus}>
         if (this.state.formStatus === 'filling') formContent = <FormRoomBooking onSubmit={this.showInfo} />
         else formContent = <FormSubmissionInfo status={this.state.formStatus} />
         return (
-            <div className="FormRoomBooking">
+            <div className="RoomBookingContainer">
                 {formContent}
             </div>
         );

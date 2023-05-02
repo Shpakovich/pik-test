@@ -36,6 +36,14 @@ form {
     cursor: pointer;
 }
 
+.button:hover {
+    background: #F72F00;
+}
+
+.button:focus {
+    background: #DC2A00;
+}
+
 .button:disabled {
     background: #FFFFFF;
     outline: 1px solid #CCCCCC;

@@ -1,0 +1,12 @@
+.RoomBookingContainer {
+    padding: 56px 56px 32px;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 8px;
+    width: 432px;
+    height: 574px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

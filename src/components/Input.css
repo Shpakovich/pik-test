@@ -6,9 +6,12 @@
 
 .input {
     background: #F2F4F7;
+    color: #4D4D4D;
     border-radius: 4px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
-
 .placeholder {
     color: #4D4D4D;
     left: 16px;
@@ -30,7 +33,8 @@
     color: #808097;
 }
 
-.input:focus ~ .placeholder {
+.input:focus ~ .placeholder,
+.input:not(:placeholder-shown) ~ .placeholder {
     color: #969BA5;
     font-weight: 400;
     font-size: 12px;
@@ -47,7 +51,7 @@ input {
     width: -webkit-fill-available;
 }
 
-.input:focus {
+.input:focus, .input:not(:placeholder-shown){
     padding: 16px 16px 8px;
     height: 32px;
     outline: 1px solid #DCDCE6;
