@@ -28,7 +28,9 @@ export default class FromRoomBooking extends Component<{}, {isSubmitBtnActive: b
     constructor(props: any) {
         super(props);
         this.changeForm = this.changeForm.bind(this);
-        this.state = {isSubmitBtnActive: false};
+        this.state = {
+            isSubmitBtnActive: false,
+        };
     }
 
     componentDidMount() {
@@ -69,7 +71,7 @@ export default class FromRoomBooking extends Component<{}, {isSubmitBtnActive: b
     render() {
         // @ts-ignore
         return (
-            <div className="FormRoomBooking">
+            <>
                 <h1>{getFormTitle()}</h1>
                 <p>Для бронирования помещений<br/>заполните форму</p>
 
@@ -84,7 +86,7 @@ export default class FromRoomBooking extends Component<{}, {isSubmitBtnActive: b
                     <input className={`button`} type="submit" value={this.getButtonText()} disabled={!this.state.isSubmitBtnActive}/>
                 </form>
                 <p className="disclaimer">Это дисклеймер, который есть во всех формах</p>
-            </div>
+            </>
         )
     }
 };
