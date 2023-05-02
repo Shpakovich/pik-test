@@ -5,6 +5,7 @@ import getFormTitle from "../helpers/getCurrentTimesOfDay";
 import {Form, FormStore} from "../store/form";
 import wordDeclension from "../helpers/wordDeclension";
 import {isValidPhoneNumber} from "libphonenumber-js";
+import {FormStatus} from "../view/RoomBooking";
 
 const initialState = {
     firstName: '',
@@ -21,21 +22,27 @@ export function updateForm (state: Form, action: HTMLInputElement) {
     return {...state, ...newStore}
 }
 
-// @ts-ignore
 const formStore = new FormStore(updateForm, initialState);
 
-export default class FromRoomBooking extends Component<{}, {isSubmitBtnActive: boolean}> {
+interface FromRoomBookingProps {
+    onSubmit: (status: FormStatus)=> void
+}
+
+interface FromRoomBookingState {
+    isSubmitBtnActive: boolean
+}
+export default class FromRoomBooking extends Component<FromRoomBookingProps, FromRoomBookingState> {
     constructor(props: any) {
         super(props);
         this.changeForm = this.changeForm.bind(this);
         this.state = {
             isSubmitBtnActive: false,
         };
+        this.submitForm = this.submitForm.bind(this);
     }
 
     componentDidMount() {
         formStore.subscribe(()=> {
-            console.error('state', formStore.state)
             this.setState({isSubmitBtnActive: Object.values(formStore.state).every(value => !!value)})
         })
     }
@@ -58,8 +65,10 @@ export default class FromRoomBooking extends Component<{}, {isSubmitBtnActive: b
         const time = Date.now();
         const isValidPhone = isValidPhoneNumber(phone, 'RU')
         if (!isValidPhone) {
-            return console.error('phone is not valid')
+            this.props.onSubmit('error');
+            console.error('phone is not valid')
         } else {
+            this.props.onSubmit('done');
             const data = {
                 user: { firstName, lastName, mail, phone },
                 order: { flatsCount, time }
@@ -69,7 +78,6 @@ export default class FromRoomBooking extends Component<{}, {isSubmitBtnActive: b
     }
 
     render() {
-        // @ts-ignore
         return (
             <>
                 <h1>{getFormTitle()}</h1>

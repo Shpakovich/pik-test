@@ -1,15 +1,15 @@
 import {FormEventHandler} from "react";
 
 export type Form = {
-    name: string,
-    surname: string,
+    firstName: string,
+    lastName: string,
     phone: string,
-    email: string,
-    roomCounter: number,
+    mail: string,
+    flatsCount: number,
 }
 
 export class FormStore {
-    constructor(updateState: void, state: Form) {
+    constructor(updateState: (state: Form, action: HTMLInputElement) => Form, state: Form) {
         // @ts-ignore
         this._updateState = updateState;
         // @ts-ignore
