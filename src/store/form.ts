@@ -32,7 +32,6 @@ export class FormStore {
     }
 
     subscribe(callback: any) {
-        console.error('subscribe')
         // @ts-ignore
         this._callbacks.push(callback);
         // @ts-ignore

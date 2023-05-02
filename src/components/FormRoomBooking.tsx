@@ -6,11 +6,11 @@ import {Form, FormStore} from "../store/form";
 import wordDeclension from "../helpers/wordDeclension";
 
 const initialState = {
-    name: '',
-    surname: '',
+    firstName: '',
+    lastName: '',
     phone: '',
-    email: '',
-    roomCounter: 0,
+    mail: '',
+    flatsCount: 0,
 };
 
 export function updateForm (state: Form, action: HTMLInputElement) {
@@ -32,12 +32,12 @@ export default class FromRoomBooking extends Component<{}, {isSubmitBtnActive: b
 
     componentDidMount() {
         formStore.subscribe(()=> {
+            console.error('state', formStore.state)
             this.setState({isSubmitBtnActive: Object.values(formStore.state).every(value => !!value)})
         })
     }
 
     changeForm(e: any) {
-        console.error('changeForm', e)
         formStore.update(e.target)
     }
 
@@ -49,6 +49,17 @@ export default class FromRoomBooking extends Component<{}, {isSubmitBtnActive: b
             : 'Забронировать помещение';
     }
 
+    submitForm (event: any) {
+        event.preventDefault(); // не перезагружать страницу после отправки формы
+        const {firstName, lastName, mail, phone, flatsCount} = formStore.state;
+        const time = Date.now();
+        const data = {
+            user: { firstName, lastName, mail, phone },
+            order: { flatsCount, time }
+        }
+        console.log(data)
+    }
+
     render() {
         // @ts-ignore
         return (
@@ -56,14 +67,14 @@ export default class FromRoomBooking extends Component<{}, {isSubmitBtnActive: b
                 <h1>{getFormTitle()}</h1>
                 <p>Для бронирования помещений<br/>заполните форму</p>
 
-                <form action="URL" onChange={e=> this.changeForm(e)}>
+                <form onSubmit={this.submitForm} onChange={e=> this.changeForm(e)}>
                     <div className="NamesFields">
-                        <Input value={formStore.state.name} id="name" type="text" label="Ваше имя" />
-                        <Input value={formStore.state.surname} id="surname" type="text" label="Фамилия" />
+                        <Input value={formStore.state.name} id="firstName" type="text" label="Ваше имя" />
+                        <Input value={formStore.state.surname} id="lastName" type="text" label="Фамилия" />
                     </div>
                     <Input value={formStore.state.phone} id="phone" type="tel" label="Телефон" />
-                    <Input value={formStore.state.email} id="email" type="email" label="E-mail" />
-                    <Input value={formStore.state.roomCounter} id="roomCounter" type="number" label="Количество помещений" />
+                    <Input value={formStore.state.email} id="mail" type="email" label="E-mail" />
+                    <Input value={formStore.state.roomCounter} id="flatsCount" type="number" label="Количество помещений" />
                     <input className={`button`} type="submit" value={this.getButtonText()} disabled={!this.state.isSubmitBtnActive}/>
                 </form>
                 <p className="disclaimer">Это дисклеймер, который есть во всех формах</p>
