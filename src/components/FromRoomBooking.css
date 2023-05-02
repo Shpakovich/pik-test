@@ -47,7 +47,7 @@ form {
 
 .button:disabled {
     background: #FFFFFF;
-    border: 1px solid #CCCCCC;
+    outline: 1px solid #CCCCCC;
     color: #CCCCCC;
     pointer-events: none;
 }
