@@ -45,6 +45,13 @@ form {
     cursor: pointer;
 }
 
+.button:disabled {
+    background: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    color: #CCCCCC;
+    pointer-events: none;
+}
+
 .disclaimer {
     font-size: 12px;
     line-height: 16px;

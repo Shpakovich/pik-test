@@ -14,7 +14,6 @@ const initialState = {
 };
 
 export function updateForm (state: Form, action: HTMLInputElement) {
-    console.error('state', action)
     let newStore = {
         [action.id]: action.value
     };
@@ -24,15 +23,17 @@ export function updateForm (state: Form, action: HTMLInputElement) {
 // @ts-ignore
 const formStore = new FormStore(updateForm, initialState);
 
-export default class FromRoomBooking extends Component {
+export default class FromRoomBooking extends Component<{}, {isSubmitBtnActive: boolean}> {
     constructor(props: any) {
         super(props);
         this.changeForm = this.changeForm.bind(this);
+        this.state = {isSubmitBtnActive: false};
     }
 
     componentDidMount() {
-        formStore.subscribe(()=> this.forceUpdate());
-        formStore.subscribe(()=> console.error('state change', formStore.state))
+        formStore.subscribe(()=> {
+            this.setState({isSubmitBtnActive: Object.values(formStore.state).every(value => !!value)})
+        })
     }
 
     changeForm(e: any) {
@@ -63,7 +64,7 @@ export default class FromRoomBooking extends Component {
                     <Input value={formStore.state.phone} id="phone" type="tel" label="Телефон" />
                     <Input value={formStore.state.email} id="email" type="email" label="E-mail" />
                     <Input value={formStore.state.roomCounter} id="roomCounter" type="number" label="Количество помещений" />
-                    <input className="button" type="submit" value={this.getButtonText()}/>
+                    <input className={`button`} type="submit" value={this.getButtonText()} disabled={!this.state.isSubmitBtnActive}/>
                 </form>
                 <p className="disclaimer">Это дисклеймер, который есть во всех формах</p>
             </div>
