@@ -103,8 +103,13 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
                 errorList.phone = 'Телефон введён некорректно';
                 return { errorList };
             })
-
-            console.error('state', this.state)
+        }
+        if (formStore.state.flatsCount <= 0 || !Number.isInteger(Number(formStore.state.flatsCount))) {
+            this.setState((prevState) => {
+                let errorList = { ...prevState.errorList };
+                errorList.flatsCount = 'Укажите колличество помещений';
+                return { errorList };
+            })
         }
 
         const EMPTY_FIELD_ERROR_TEXT = 'Заполните поле';
