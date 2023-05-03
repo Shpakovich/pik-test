@@ -7,6 +7,7 @@ import wordDeclension from "../helpers/wordDeclension";
 import {isValidPhoneNumber} from "libphonenumber-js";
 import {FormStatus} from "../view/RoomBooking";
 import IMask from 'imask';
+import {ValidateEmail} from "../helpers/validateEmail";
 
 const initialState = {
     firstName: '',
@@ -66,9 +67,9 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
 
     getButtonText () {
         const wordList = ['помещение', 'помещения', 'помещений']
-        const room = wordDeclension(formStore.state.roomCounter, wordList)
-        return formStore.state.roomCounter
-            ? `Забронировать ${formStore.state.roomCounter} ${room}`
+        const room = wordDeclension(formStore.state.flatsCount, wordList)
+        return formStore.state.flatsCount
+            ? `Забронировать ${formStore.state.flatsCount} ${room}`
             : 'Забронировать помещение';
     }
 
@@ -88,7 +89,16 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
                 })
             }
         }
-        const isValidPhone = isValidPhoneNumber(phone, 'RU')
+        const isValidPhone = isValidPhoneNumber(phone, 'RU');
+        const isValidEmail = ValidateEmail(formStore.state.mail)
+
+        if (!isValidEmail) {
+            this.setState((prevState) => {
+                let errorList = { ...prevState.errorList };
+                errorList.mail = 'Почта введена некорректно';
+                return { errorList };
+            })
+        }
         if (formStore.state.phone && !isValidPhone) {
             this.setState((prevState) => {
                 let errorList = { ...prevState.errorList };
@@ -113,7 +123,7 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
                 <h1>{getFormTitle()}</h1>
                 <p>Для бронирования помещений<br/>заполните форму</p>
 
-                <form onSubmit={this.submitForm} onChange={e=> this.changeForm(e)}>
+                <form onSubmit={this.submitForm} onChange={e=> this.changeForm(e)} noValidate>
                     <div className="NamesFields">
                         <Input id="firstName" type="text" label="Ваше имя" isError={this.state.errorList.firstName}/>
                         <Input id="lastName" type="text" label="Фамилия" isError={this.state.errorList.lastName}/>
