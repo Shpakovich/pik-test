@@ -32,7 +32,8 @@ interface FromRoomBookingProps {
 
 interface FromRoomBookingState {
     isSubmitBtnActive: boolean,
-    errorList: any
+    errorList: any,
+    buttonLoading: boolean
 }
 export default class FromRoomBooking extends Component<FromRoomBookingProps, FromRoomBookingState> {
     constructor(props: any) {
@@ -41,6 +42,7 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
         this.state = {
             isSubmitBtnActive: false,
             errorList: {},
+            buttonLoading: false
         };
         this.submitForm = this.submitForm.bind(this);
     }
@@ -73,24 +75,20 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
             : 'Забронировать помещение';
     }
 
+    getButton () {
+        return this.state.buttonLoading
+            ? <div className='loading-button'><div className="dot-flashing"></div></div>
+            : <input className={`button`} type="submit" value={this.getButtonText()}/>
+    }
+
     submitForm (event: any) {
         event.preventDefault(); // не перезагружать страницу после отправки формы
         const {firstName, lastName, mail, phone, flatsCount} = formStore.state;
         const time = Date.now();
-        const EMPTY_FIELD_ERROR_TEXT = 'Заполните поле';
 
-        for (const field in formStore.state) {
-            if (!formStore.state[field]) {
-                // @ts-ignore
-                this.setState((prevState) => {
-                    let errorList = { ...prevState.errorList };
-                    errorList[field] = EMPTY_FIELD_ERROR_TEXT;
-                    return { errorList };
-                })
-            }
-        }
         const isValidPhone = isValidPhoneNumber(phone, 'RU');
-        const isValidEmail = ValidateEmail(formStore.state.mail)
+        const isValidEmail = ValidateEmail(formStore.state.mail);
+        let isFormEmpty = false;
 
         if (!isValidEmail) {
             this.setState((prevState) => {
@@ -107,14 +105,42 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
             })
 
             console.error('state', this.state)
-        } else {
-            //this.props.onSubmit('done');
-            const data = {
-                user: { firstName, lastName, mail, phone },
-                order: { flatsCount, time }
-            }
-            console.log(data)
         }
+
+        const EMPTY_FIELD_ERROR_TEXT = 'Заполните поле';
+
+        for (const field in formStore.state) {
+            if (!formStore.state[field]) {
+                isFormEmpty = true;
+                this.setState((prevState) => {
+                    let errorList = { ...prevState.errorList };
+                    errorList[field] = EMPTY_FIELD_ERROR_TEXT;
+                    return { errorList };
+                })
+            }
+        }
+
+        if (!isValidEmail || !isValidPhone || isFormEmpty) return;
+        const data = {
+            user: { firstName, lastName, mail, phone },
+            order: { flatsCount, time }
+        }
+        const url = "https://strapi.pik.ru/front-tests";
+        this.setState({buttonLoading: true});
+        fetch(url, {
+            body: JSON.stringify(data),
+            cache: 'no-cache',
+            headers: {
+                'content-type': 'application/json'
+            },
+            method: 'POST',
+        }).then(()=> {
+            console.log(data);
+            this.props.onSubmit('done');
+        }).catch((error)=> {
+            console.error(`Form submit error: ${error}`);
+            this.props.onSubmit('error');
+        }).finally(()=> this.setState({buttonLoading: false}))
     }
 
     render() {
@@ -131,7 +157,7 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
                     <Input id="phone" type="tel" label="Телефон" isError={this.state.errorList.phone} />
                     <Input id="mail" type="email" label="E-mail" isError={this.state.errorList.mail}/>
                     <Input id="flatsCount" type="number" label="Количество помещений" isError={this.state.errorList.flatsCount}/>
-                    <input className={`button`} type="submit" value={this.getButtonText()}/>
+                    {this.getButton()}
                 </form>
                 <p className="disclaimer">Это дисклеймер, который есть во всех формах</p>
             </>

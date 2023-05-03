@@ -9,7 +9,7 @@ interface Props {
 export default class FormSubmissionInfo extends Component<Props> {
     render() {
         const ERROR_TEXT = 'Ошибка. Попробуйте позже';
-        const DONE_TEXT = 'Ваша заявка отправленае';
+        const DONE_TEXT = 'Ваша заявка отправлена';
         return (
             <>
                 <img className="icon" src={this.props.status === 'error' ? error : done} alt={this.props.status}/>

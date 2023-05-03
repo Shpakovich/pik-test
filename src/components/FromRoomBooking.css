@@ -25,7 +25,7 @@ form {
     gap: 24px;
 }
 
-.button {
+.button, .loading-button {
     height: auto;
     background: #FF4114;
     color: #FFFFFF;
@@ -33,6 +33,12 @@ form {
     line-height: 20px;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.loading-button {
+    display: flex;
+    min-height: 52px;
+    pointer-events: none;
 }
 
 .button:hover {
@@ -54,5 +60,57 @@ form {
     font-size: 12px;
     line-height: 16px;
     color: #969BA5;
+}
+
+/**
+ * ==============================================
+ * Dot Flashing
+ * ==============================================
+ */
+.dot-flashing {
+    margin: auto;
+    position: relative;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    color: #FFFFFF;
+    animation: dot-flashing 1s infinite linear alternate;
+    animation-delay: 0.5s;
+}
+.dot-flashing::before, .dot-flashing::after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    top: 0;
+}
+.dot-flashing::before {
+    left: -15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    color: #FFFFFF;
+    animation: dot-flashing 1s infinite alternate;
+    animation-delay: 0s;
+}
+.dot-flashing::after {
+    left: 15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    color: #FFFFFF;
+    animation: dot-flashing 1s infinite alternate;
+    animation-delay: 1s;
+}
+
+@keyframes dot-flashing {
+    0% {
+        background-color: #FFFFFF;
+    }
+    50%, 100% {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
 }
 
