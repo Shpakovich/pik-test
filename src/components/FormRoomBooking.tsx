@@ -30,7 +30,8 @@ interface FromRoomBookingProps {
 }
 
 interface FromRoomBookingState {
-    isSubmitBtnActive: boolean
+    isSubmitBtnActive: boolean,
+    errorList: any
 }
 export default class FromRoomBooking extends Component<FromRoomBookingProps, FromRoomBookingState> {
     constructor(props: any) {
@@ -38,13 +39,14 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
         this.changeForm = this.changeForm.bind(this);
         this.state = {
             isSubmitBtnActive: false,
+            errorList: {},
         };
         this.submitForm = this.submitForm.bind(this);
     }
 
     componentDidMount() {
         formStore.subscribe(()=> {
-            this.setState({isSubmitBtnActive: Object.values(formStore.state).every(value => !!value)})
+            //this.setState({isSubmitBtnActive: Object.values(formStore.state).every(value => !!value)})
         });
         IMask(
             // @ts-ignore
@@ -69,12 +71,32 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
         event.preventDefault(); // не перезагружать страницу после отправки формы
         const {firstName, lastName, mail, phone, flatsCount} = formStore.state;
         const time = Date.now();
+
+        for (const field in formStore.state) {
+            if (!formStore.state[field]) {
+                // @ts-ignore
+                this.setState((prevState) => {
+                    let errorList = { ...prevState.errorList }; // creating copy of state variable jasper
+                    console.error('errorList', errorList)
+                    errorList[field] = true;                     // update the name property, assign a new value
+                    return { errorList };                                 // return new object jasper object
+                })
+            }
+        }
         const isValidPhone = isValidPhoneNumber(phone, 'RU')
-        if (!isValidPhone) {
-            this.props.onSubmit('error');
+        if (formStore.state.phone && !isValidPhone) {
+            // this.props.onSubmit('error');
             console.error('phone is not valid')
+            this.setState((prevState) => {
+                let errorList = { ...prevState.errorList }; // creating copy of state variable jasper
+                console.error('errorList', errorList)
+                errorList.phone = true;                     // update the name property, assign a new value
+                return { errorList };                                 // return new object jasper object
+            })
+
+            console.error('state', this.state)
         } else {
-            this.props.onSubmit('done');
+            //this.props.onSubmit('done');
             const data = {
                 user: { firstName, lastName, mail, phone },
                 order: { flatsCount, time }
@@ -91,13 +113,13 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
 
                 <form onSubmit={this.submitForm} onChange={e=> this.changeForm(e)}>
                     <div className="NamesFields">
-                        <Input value={formStore.state.name} id="firstName" type="text" label="Ваше имя" />
-                        <Input value={formStore.state.surname} id="lastName" type="text" label="Фамилия" />
+                        <Input id="firstName" type="text" label="Ваше имя" isError={this.state.errorList.firstName}/>
+                        <Input id="lastName" type="text" label="Фамилия" isError={this.state.errorList.lastName}/>
                     </div>
-                    <Input value={formStore.state.phone} id="phone" type="tel" label="Телефон" />
-                    <Input value={formStore.state.email} id="mail" type="email" label="E-mail" />
-                    <Input value={formStore.state.roomCounter} id="flatsCount" type="number" label="Количество помещений" />
-                    <input className={`button`} type="submit" value={this.getButtonText()} disabled={!this.state.isSubmitBtnActive}/>
+                    <Input id="phone" type="tel" label="Телефон" isError={this.state.errorList.phone} />
+                    <Input id="mail" type="email" label="E-mail" isError={this.state.errorList.mail}/>
+                    <Input id="flatsCount" type="number" label="Количество помещений" isError={this.state.errorList.flatsCount}/>
+                    <input className={`button`} type="submit" value={this.getButtonText()}/>
                 </form>
                 <p className="disclaimer">Это дисклеймер, который есть во всех формах</p>
             </>

@@ -2,18 +2,24 @@ import React, {Component} from 'react';
 import './Input.css'
 
 interface Props {
-    value: any;
     type: string,
     id: string,
-    label: string
+    label: string,
+    isError?: boolean
 }
 
 class Input extends Component<Props> {
+    getErrorText() {
+        return (
+            <p className="error-text">Заполните поле</p>
+        );
+    }
     render() {
         return (
-            <div className="input-container ic1">
-                <input id={this.props.id} className="input" type={this.props.type} placeholder=" "/>
+            <div className={`input-container ${!!this.props.isError && 'error-container'}`}>
+                <input id={this.props.id} className={`input ${!!this.props.isError && 'error'}`} type={this.props.type} placeholder=" "/>
                 <label htmlFor={this.props.id} className="placeholder">{this.props.label}</label>
+                {!!this.props.isError && this.getErrorText()}
             </div>
         )
     }

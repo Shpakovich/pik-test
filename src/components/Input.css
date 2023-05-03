@@ -1,7 +1,12 @@
 .input-container {
-    height: 50px;
+    height: 56px;
     position: relative;
     width: initial;
+    margin-bottom: 24px;
+}
+
+.error-container {
+    margin-bottom: 38px!important;
 }
 
 .input {
@@ -11,6 +16,20 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.error {
+    background: rgba(230, 70, 70, 0.1)!important;
+    outline: 2px solid #E64646!important;
+}
+.error-text {
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 14px;
+    color: #E64646;
+    position: absolute;
+    bottom: -19px;
+    right: 0;
 }
 .placeholder {
     color: #4D4D4D;
@@ -42,7 +61,6 @@
 }
 
 input {
-    height: 24px;
     position: relative;
     padding: 16px;
     border: none;

@@ -15,7 +15,6 @@ form {
     display: grid;
     grid-auto-flow: row;
     grid-template-columns: 1fr;
-    gap: 24px;
     margin: 32px 0 24px;
 }
 
