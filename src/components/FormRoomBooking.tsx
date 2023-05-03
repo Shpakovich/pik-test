@@ -51,12 +51,17 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
         IMask(
             // @ts-ignore
             document.getElementById('phone'), {
-                mask: '+{7}(000)000-00-00'
+                mask: '+{7}(000) 000-00-00'
             });
     }
 
     changeForm(e: any) {
-        formStore.update(e.target)
+        formStore.update(e.target);
+        this.setState((prevState) => {
+            let errorList = { ...prevState.errorList };
+            errorList[e.target.id] = '';
+            return { errorList };
+        })
     }
 
     getButtonText () {
@@ -71,27 +76,24 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
         event.preventDefault(); // не перезагружать страницу после отправки формы
         const {firstName, lastName, mail, phone, flatsCount} = formStore.state;
         const time = Date.now();
+        const EMPTY_FIELD_ERROR_TEXT = 'Заполните поле';
 
         for (const field in formStore.state) {
             if (!formStore.state[field]) {
                 // @ts-ignore
                 this.setState((prevState) => {
-                    let errorList = { ...prevState.errorList }; // creating copy of state variable jasper
-                    console.error('errorList', errorList)
-                    errorList[field] = true;                     // update the name property, assign a new value
-                    return { errorList };                                 // return new object jasper object
+                    let errorList = { ...prevState.errorList };
+                    errorList[field] = EMPTY_FIELD_ERROR_TEXT;
+                    return { errorList };
                 })
             }
         }
         const isValidPhone = isValidPhoneNumber(phone, 'RU')
         if (formStore.state.phone && !isValidPhone) {
-            // this.props.onSubmit('error');
-            console.error('phone is not valid')
             this.setState((prevState) => {
-                let errorList = { ...prevState.errorList }; // creating copy of state variable jasper
-                console.error('errorList', errorList)
-                errorList.phone = true;                     // update the name property, assign a new value
-                return { errorList };                                 // return new object jasper object
+                let errorList = { ...prevState.errorList };
+                errorList.phone = 'Телефон введён некорректно';
+                return { errorList };
             })
 
             console.error('state', this.state)

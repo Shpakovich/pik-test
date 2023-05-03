@@ -5,13 +5,13 @@ interface Props {
     type: string,
     id: string,
     label: string,
-    isError?: boolean
+    isError?: string
 }
 
 class Input extends Component<Props> {
     getErrorText() {
         return (
-            <p className="error-text">Заполните поле</p>
+            <p className="error-text">{this.props.isError}</p>
         );
     }
     render() {

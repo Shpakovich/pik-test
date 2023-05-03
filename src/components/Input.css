@@ -3,10 +3,12 @@
     position: relative;
     width: initial;
     margin-bottom: 24px;
+    transition: margin-bottom 0.5s;
 }
 
 .error-container {
     margin-bottom: 38px!important;
+    transition: margin-bottom 0.5s;
 }
 
 .input {
@@ -21,6 +23,7 @@
 .error {
     background: rgba(230, 70, 70, 0.1)!important;
     outline: 2px solid #E64646!important;
+    transition: outline 0.5s;
 }
 .error-text {
     font-weight: 400;
@@ -73,5 +76,6 @@ input {
     padding: 16px 16px 8px;
     height: 32px;
     outline: 1px solid #DCDCE6;
+    transition: outline 0.5s;
     background: #FFFFFF;
 }
