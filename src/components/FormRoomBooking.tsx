@@ -6,6 +6,7 @@ import {Form, FormStore} from "../store/form";
 import wordDeclension from "../helpers/wordDeclension";
 import {isValidPhoneNumber} from "libphonenumber-js";
 import {FormStatus} from "../view/RoomBooking";
+import IMask from 'imask';
 
 const initialState = {
     firstName: '',
@@ -44,7 +45,12 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
     componentDidMount() {
         formStore.subscribe(()=> {
             this.setState({isSubmitBtnActive: Object.values(formStore.state).every(value => !!value)})
-        })
+        });
+        IMask(
+            // @ts-ignore
+            document.getElementById('phone'), {
+                mask: '+{7}(000)000-00-00'
+            });
     }
 
     changeForm(e: any) {
