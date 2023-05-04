@@ -8,6 +8,7 @@ import {isValidPhoneNumber} from "libphonenumber-js";
 import {FormStatus} from "../view/RoomBooking";
 import IMask from 'imask';
 import {ValidateEmail} from "../helpers/validateEmail";
+import {sendForm} from "../api/front-test";
 
 const initialState = {
     firstName: '',
@@ -32,11 +33,13 @@ interface FromRoomBookingProps {
 
 interface FromRoomBookingState {
     isSubmitBtnActive: boolean,
-    errorList: any,
+    errorList: {
+        [key: string]: string
+    },
     buttonLoading: boolean
 }
 export default class FromRoomBooking extends Component<FromRoomBookingProps, FromRoomBookingState> {
-    constructor(props: any) {
+    constructor(props: FromRoomBookingProps) {
         super(props);
         this.changeForm = this.changeForm.bind(this);
         this.state = {
@@ -58,11 +61,12 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
             });
     }
 
-    changeForm(e: any) {
-        formStore.update(e.target);
+    changeForm(event: React.FormEvent<HTMLFormElement>) {
+        const target = event.target as HTMLFormElement;
+        formStore.update(target);
         this.setState((prevState) => {
             let errorList = { ...prevState.errorList };
-            errorList[e.target.id] = '';
+            errorList[target.id] = '';
             return { errorList };
         })
     }
@@ -88,6 +92,7 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
 
         const isValidPhone = isValidPhoneNumber(phone, 'RU');
         const isValidEmail = ValidateEmail(formStore.state.mail);
+        const isValidFlatsCount = formStore.state.flatsCount > 0 && Number.isInteger(Number(formStore.state.flatsCount));
         let isFormEmpty = false;
 
         if (!isValidEmail) {
@@ -104,7 +109,7 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
                 return { errorList };
             })
         }
-        if (formStore.state.flatsCount <= 0 || !Number.isInteger(Number(formStore.state.flatsCount))) {
+        if (!isValidFlatsCount) {
             this.setState((prevState) => {
                 let errorList = { ...prevState.errorList };
                 errorList.flatsCount = 'Укажите колличество помещений';
@@ -125,27 +130,23 @@ export default class FromRoomBooking extends Component<FromRoomBookingProps, Fro
             }
         }
 
-        if (!isValidEmail || !isValidPhone || isFormEmpty) return;
+        // не отправлять форму, если поля не прошли валидацию
+        if (!isValidEmail || !isValidPhone || isFormEmpty || !isValidFlatsCount) return;
+
         const data = {
             user: { firstName, lastName, mail, phone },
             order: { flatsCount, time }
         }
-        const url = "https://strapi.pik.ru/front-tests";
+        
         this.setState({buttonLoading: true});
-        fetch(url, {
-            body: JSON.stringify(data),
-            cache: 'no-cache',
-            headers: {
-                'content-type': 'application/json'
-            },
-            method: 'POST',
-        }).then(()=> {
-            console.log(data);
-            this.props.onSubmit('done');
-        }).catch((error)=> {
-            console.error(`Form submit error: ${error}`);
-            this.props.onSubmit('error');
-        }).finally(()=> this.setState({buttonLoading: false}))
+        sendForm(data)
+            .then(()=> {
+                console.log(data);
+                this.props.onSubmit('done');
+            }).catch((error)=> {
+                console.error(`Form submit error: ${error}`);
+                this.props.onSubmit('error');
+            }).finally(()=> this.setState({buttonLoading: false}))
     }
 
     render() {

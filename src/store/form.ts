@@ -24,14 +24,14 @@ export class FormStore {
     }
 
     // @ts-ignore
-    update(action: Partial<Form>): FormEventHandler<HTMLFormElement> | undefined {
+    update(action: EventTarget): FormEventHandler<HTMLFormElement> | undefined {
         // @ts-ignore
         this._state = this._updateState(this.state, action)
         // @ts-ignore
         this._callbacks.forEach(callback => callback())
     }
 
-    subscribe(callback: any) {
+    subscribe(callback: () => any) {
         // @ts-ignore
         this._callbacks.push(callback);
         // @ts-ignore
